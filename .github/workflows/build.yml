@@ -1,0 +1,39 @@
+name: Build & Test (Windows)
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore PersonApp/PersonApp.csproj
+
+      - name: Build
+        run: dotnet build PersonApp/PersonApp.csproj -c Release --no-restore
+
+      - name: Publish WinForms app
+        run: dotnet publish PersonApp/PersonApp.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=false -o publish
+
+      - name: Zip project for Canvas
+        run: |
+          powershell Compress-Archive -Path PersonApp -DestinationPath Uppgift3_PersonApp.zip -Force
+
+      - name: Upload artifacts (zip + published exe)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deliverables
+          path: |
+            Uppgift3_PersonApp.zip
+            publish/**
