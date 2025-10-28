@@ -18,13 +18,13 @@ jobs:
             8.0.x
 
       - name: Restore
-        run: dotnet restore PersonApp/PersonApp.csproj
+        run: dotnet restore PersonApp.csproj
 
       - name: Build
-        run: dotnet build PersonApp/PersonApp.csproj -c Release --no-restore
+        run: dotnet build PersonApp.csproj -c Release --no-restore
 
       - name: Publish WinForms app
-        run: dotnet publish PersonApp/PersonApp.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=false -o publish
+        run: dotnet publish PersonApp.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=false -o publish
 
       - name: Zip project for Canvas
         run: |
